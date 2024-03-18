@@ -1,0 +1,6 @@
+{
+  "entryPoints": [
+    "./src/home-work/graphic-calculator/*.ts",
+  ],
+  "out": "./docs",
+}
