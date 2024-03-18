@@ -43,3 +43,10 @@ canvas {
   margin-bottom: 1rem;
   display: block;
 }
+
+.container img {
+  display: block;
+  /* Para que la imagen sea un bloque y pueda centrarse horizontalmente */
+  margin: 0 auto;
+  /* Centrar horizontalmente */
+}

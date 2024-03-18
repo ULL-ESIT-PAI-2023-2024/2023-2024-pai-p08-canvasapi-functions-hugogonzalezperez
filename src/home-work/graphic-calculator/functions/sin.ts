@@ -18,7 +18,7 @@ export class Sin implements Function {
    * @returns the result of evaluating the function at the given point 
    */
   evaluate(pointToEvaluate: number): number {
-    return this.slope * Math.sin(this.coeficent * pointToEvaluate) + this.constant;
+    return -this.slope * Math.sin(this.coeficent * pointToEvaluate) - this.constant;
   }
 
   /**
@@ -32,18 +32,15 @@ export class Sin implements Function {
    * @param context the canvas context in which the function will be drawn
    */
   draw(context: CanvasRenderingContext2D): void {
-    context.moveTo(0, this.evaluate(0));
     context.beginPath();
     context.strokeStyle = 'green';
     context.lineWidth = 2;
     let canvasWidth = context.canvas.width;
-    for (let actualX = -100 * this.scale; actualX < canvasWidth; actualX = actualX + this.scale / 10) {
+
+    for (let actualX = -canvasWidth; actualX < canvasWidth; actualX += this.scale / 10) {
       context.lineTo(actualX, this.evaluate(actualX / this.scale) * this.scale);
     }
-    context.moveTo(0, this.evaluate(0));
-    for (let actualX = 0; actualX > 0 - (canvasWidth / 2); actualX = actualX - this.scale / 10) {
-      context.lineTo(actualX, this.evaluate(actualX / this.scale) * this.scale);
-    }
+
     context.stroke();
   }
 
