@@ -1,3 +1,18 @@
+/**
+ * Universidad de La Laguna
+ * Escuela Superior de Ingeniería y Tecnología
+ * Grado en Ingeniería Informática
+ * Programación de Aplicaciones Interactivas
+ *
+ * @author Hugo González Pérez
+ * @since Mar 20 2024
+ * @desc grid.ts
+ * Fichero que contiene la clase Grid que se encarga de dibujar la cuadrícula
+ * en el canvas e inicializarla correctamente
+ * 
+ * @see {@link https://github.com/ULL-ESIT-PAI-2023-2024/2023-2024_P08_CanvasAPI-2/blob/main/p08_Canvas-GraphingCalculator.md}
+ */
+
 export class Grid {
   constructor(private scale: number) {
     this.scale = scale;
@@ -21,78 +36,95 @@ export class Grid {
   private drawAxis(context: CanvasRenderingContext2D): void {
     context.beginPath();
     context.strokeStyle = 'black';
-    context.lineWidth = 3;
+    context.lineWidth = 2;
 
-    context.moveTo(0, 0);
-    context.lineTo(0, context.canvas.height);
-    context.moveTo(0, 0);
+    //  Eje X
+    context.moveTo(-context.canvas.width, 0);
     context.lineTo(context.canvas.width, 0);
-    context.moveTo(0, 0);
-    context.lineTo(0, -context.canvas.height);
-    context.moveTo(0, 0);
-    context.lineTo(-context.canvas.width, 0);
+    // Eje Y
+    context.moveTo(0, -context.canvas.height);
+    context.lineTo(0, context.canvas.height);
     context.stroke();
   }
 
+  /**
+   * Dibuja las lineas verticales auxiliares en la cuadricula (las discontinuas)
+   * @param context 
+   */
   private drawVerticalLines(context: CanvasRenderingContext2D): void {
     context.beginPath();
     context.strokeStyle = 'grey';
     context.lineWidth = 1;
-    const halfWidth = context.canvas.width / 2;
+    const canvasWidth = context.canvas.width;
 
-    // dibuja las lineas verticales para el lado negativo del eje y
-    for (let i = 0; i > -context.canvas.width; i -= this.scale) {
-      context.moveTo(i, -halfWidth);
-      context.lineTo(i, context.canvas.height);
-    }
-    // dibuja las lineas verticales para el lado positivo del eje y
-    for (let i = 0; i < context.canvas.width; i += this.scale) {
-      context.moveTo(i, -halfWidth);
-      context.lineTo(i, context.canvas.height);
+    context.setLineDash([5, 15]);
+    for (let i = 0; i < canvasWidth; i += this.scale) {
+      // Parte positiva del eje x
+      context.moveTo(i, -canvasWidth);
+      context.lineTo(i, canvasWidth);
+      // Parte negativa del eje x
+      context.moveTo(-i, -canvasWidth);
+      context.lineTo(-i, canvasWidth);
     }
     context.stroke();
+    context.setLineDash([]);
   }
 
+  /**
+   * Dibuja las lineas horizontales auxiliares en la cuadricula (las discontinuas)
+   * @param context 
+   */
   private drawHorizontalLines(context: CanvasRenderingContext2D): void {
     context.beginPath();
     context.strokeStyle = 'grey';
     context.lineWidth = 1;
-    const halfWidth = context.canvas.width / 2;
+    const canvasHeight = context.canvas.height;
 
-    // dibuja las lineas horizontales para el lado negativo del eje x
-    for (let i = 0; i > -context.canvas.height; i -= this.scale) {
-      context.moveTo(-halfWidth, i);
-      context.lineTo(context.canvas.width, i);
+    context.setLineDash([5, 15]); // Discontinuas
+    for (let i = 0; i < canvasHeight; i += this.scale) {
+      // Parte positiva del eje y
+      context.moveTo(-canvasHeight, i);
+      context.lineTo(canvasHeight, i);
+      // Parte negativa del eje y
+      context.moveTo(-canvasHeight, -i);
+      context.lineTo(canvasHeight, -i);
     }
 
-    // dibuja las lineas horizontales para el lado positivo del eje x
-    for (let i = 0; i < context.canvas.height; i += this.scale) {
-      context.moveTo(-halfWidth, i);
-      context.lineTo(context.canvas.width, i);
-    }
     context.stroke();
+    context.setLineDash([]);
   }
 
+  /**
+   * Método encargado de escribir el número de la celda  en cada una de sus esquinas
+   * @param context 
+   */
   private drawNumbers(context: CanvasRenderingContext2D): void {
-    let canvasWidth = context.canvas.width;
-    let canvasHeight = context.canvas.height;
-    context.font = 'bold 14px Arial'; // Set font to bold
+    // Tipografía de los números
+    const fontSize = 14;
+    const font = 'bold ' + fontSize + 'px Arial';
+    context.font = font;
     context.fillStyle = 'black';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
-    let yPositionOfNumbers = 16;
-    let xPositionOfNumbers = -12;
-    for (let actualX = this.scale; actualX < canvasWidth; actualX += this.scale) {
-      context.fillText((actualX / this.scale).toString(), actualX, yPositionOfNumbers);
+
+    const scale = this.scale;
+    const halfCanvasWidth = context.canvas.width / 2;
+    const halfCanvasHeight = context.canvas.height / 2;
+
+    // Eje X
+    for (let actualX = scale; actualX < halfCanvasWidth; actualX += scale) {
+      if ((actualX/scale) % 2 == 0) {
+        context.fillText((actualX / scale).toString(), actualX, fontSize);
+        context.fillText((-actualX / scale).toString(), -actualX, fontSize);
+      }
     }
-    for (let actualX = -this.scale; actualX > 0 - (canvasWidth / 2); actualX -= this.scale) {
-      context.fillText((actualX / this.scale).toString(), actualX, yPositionOfNumbers);
-    }
-    for (let actualY = this.scale; actualY < canvasHeight; actualY += this.scale) {
-      context.fillText((-actualY / this.scale).toString(), xPositionOfNumbers, actualY);
-    }
-    for (let actualY = -this.scale; actualY > 0 - (canvasHeight / 2); actualY -= this.scale) {
-      context.fillText((-actualY / this.scale).toString(), xPositionOfNumbers, actualY);
+
+    // Eje Y
+    for (let actualY = scale; actualY < halfCanvasHeight; actualY += scale) {
+      if ((actualY/scale) % 2 == 0) {
+        context.fillText((-actualY / scale).toString(), fontSize, actualY);
+        context.fillText((actualY / scale).toString(), fontSize, -actualY);
+      }
     }
   }
 }

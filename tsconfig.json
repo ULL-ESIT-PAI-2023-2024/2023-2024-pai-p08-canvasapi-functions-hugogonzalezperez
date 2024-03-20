@@ -28,7 +28,7 @@
     "test",
     "public",
     "dist",
-    "docs",
+    "src/home-work/web/docs",
     "search.js",
     "main.js",
     "src/home-work/web/dist",
