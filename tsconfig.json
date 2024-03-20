@@ -8,7 +8,7 @@
     "module": "ES6",
     "allowJs": true,
     "rootDir": "./",
-    "outDir": "./src/home-work/web/dist",
+    "outDir": "./src/evaluation-session/web/dist",
     "declaration": false, /* Generate (or not) .d.ts files for every TypeScript file inside your project */
     "alwaysStrict": true, /* Parse in strict mode and emit "use strict" for each source file. */
     "strict": true, /* Enable all strict type-checking options. */
@@ -32,5 +32,6 @@
     "search.js",
     "main.js",
     "src/home-work/web/dist",
+    "src/evaluation-session/web/dist",
   ]
 }
